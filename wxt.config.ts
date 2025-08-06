@@ -4,8 +4,8 @@ import { defineConfig } from 'wxt';
 export default defineConfig({
   modules: ['@wxt-dev/module-react'],
   manifest: {
-    name: 'Submarine - YouTube 字幕位置控制器',
-    description: '一个浏览器扩展，允许用户调整 YouTube 视频的字幕位置。支持 YouTube 原生字幕。',
+    name: 'Submarine - YouTube Subtitle Position Controller',
+    description: 'A browser extension that allows users to adjust YouTube video subtitle positions. Supports YouTube native subtitles.',
     version: '1.0.0',
     permissions: [
       'activeTab',
