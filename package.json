@@ -1,6 +1,6 @@
 {
-  "name": "wxt-react-starter",
-  "description": "manifest.json description",
+  "name": "submarine",
+  "description": "A browser extension that allows users to adjust subtitle positions on YouTube videos. Supports both native YouTube subtitles and Immersive Translate plugin subtitles with real-time preview and persistent settings.",
   "private": true,
   "version": "0.0.0",
   "type": "module",
