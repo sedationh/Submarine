@@ -35,12 +35,12 @@ export default defineContentScript({
       if (captionContainer) {
         captionContainer.style.position = "fixed";
       }
-      
+
       // Add CSS to remove margin-bottom from caption window
-      const styleId = 'submarine-caption-style';
+      const styleId = "submarine-caption-style";
       let styleElement = document.getElementById(styleId) as HTMLStyleElement;
       if (!styleElement) {
-        styleElement = document.createElement('style');
+        styleElement = document.createElement("style");
         styleElement.id = styleId;
         document.head.appendChild(styleElement);
       }
@@ -49,10 +49,15 @@ export default defineContentScript({
           margin-bottom: 0 !important;
         }
       `;
-      
+
       const divBelow = document.getElementById("below");
+      // id="secondary"
+      const divSecondary = document.getElementById("secondary");
       if (divBelow) {
         divBelow.style.marginTop = "240px";
+      }
+      if (divSecondary) {
+        divSecondary.style.marginTop = "240px";
       }
     }
 
@@ -67,15 +72,21 @@ export default defineContentScript({
       }
 
       // Remove custom CSS style
-      const styleElement = document.getElementById('submarine-caption-style') as HTMLStyleElement;
+      const styleElement = document.getElementById(
+        "submarine-caption-style"
+      ) as HTMLStyleElement;
       if (styleElement) {
         styleElement.remove();
       }
 
       // Reset below content margin
       const divBelow = document.getElementById("below");
+      const divSecondary = document.getElementById("secondary");
       if (divBelow) {
         divBelow.style.marginTop = ""; // Clear inline styles
+      }
+      if (divSecondary) {
+        divSecondary.style.marginTop = "";
       }
     }
 
@@ -83,11 +94,19 @@ export default defineContentScript({
       const captionContainer = document.getElementById(
         "ytp-caption-window-container"
       );
+
+      if (!captionContainer) {
+        return;
+      }
       const divBelow = document.getElementById("below");
-      if (captionContainer && divBelow) {
-        if (window.getComputedStyle(captionContainer).position !== "fixed") {
-          // If the caption container is not fixed, reset the margin of the 'below' div
+      const divSecondary = document.getElementById("secondary");
+      if (window.getComputedStyle(captionContainer).position !== "fixed") {
+        // If the caption container is not fixed, reset the margin of the 'below' div
+        if (divBelow) {
           divBelow.style.marginTop = "";
+        }
+        if (divSecondary) {
+          divSecondary.style.marginTop = "";
         }
       }
     }
@@ -96,9 +115,11 @@ export default defineContentScript({
     async function autoStartCustomPosition() {
       try {
         // Check if auto-start is enabled in storage
-        const result = await browser.storage.local.get(['autoStartCustomPosition']);
+        const result = await browser.storage.local.get([
+          "autoStartCustomPosition",
+        ]);
         const autoStartEnabled = result.autoStartCustomPosition || false;
-        
+
         if (!autoStartEnabled) {
           console.log("Auto-start disabled, skipping custom position");
           return;
@@ -147,8 +168,17 @@ export default defineContentScript({
       }
     });
 
+    let lastUrl = "";
+    function checkUrlChange() {
+      const currentUrl = window.location.href;
+      if (currentUrl !== lastUrl) {
+        lastUrl = currentUrl;
+        autoStartCustomPosition();
+      }
+    }
+
     // Auto-start custom position on page load
-    setInterval(autoStartCustomPosition, 1000);
+    setInterval(checkUrlChange, 1000);
 
     // Monitor for caption status changes
     setInterval(monitorCaptions, 3000); // Check every 3 seconds
