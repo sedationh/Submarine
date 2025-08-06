@@ -148,7 +148,7 @@ export default defineContentScript({
     });
 
     // Auto-start custom position on page load
-    autoStartCustomPosition();
+    setInterval(autoStartCustomPosition, 1000);
 
     // Monitor for caption status changes
     setInterval(monitorCaptions, 3000); // Check every 3 seconds
