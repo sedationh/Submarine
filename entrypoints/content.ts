@@ -92,6 +92,32 @@ export default defineContentScript({
       }
     }
 
+    // Function to auto-start custom position
+    async function autoStartCustomPosition() {
+      try {
+        // Check if auto-start is enabled in storage
+        const result = await browser.storage.local.get(['autoStartCustomPosition']);
+        const autoStartEnabled = result.autoStartCustomPosition || false;
+        
+        if (!autoStartEnabled) {
+          console.log("Auto-start disabled, skipping custom position");
+          return;
+        }
+
+        // Check if we're on a video page
+        const videoPlayer = document.querySelector(".html5-video-player");
+        if (videoPlayer) {
+          // Wait for the page to fully load, then set custom position
+          setTimeout(() => {
+            console.log("Auto-starting custom position");
+            setCustomPosition();
+          }, 3000); // Wait 3 seconds for page to stabilize
+        }
+      } catch (error) {
+        console.error("Failed to check auto-start setting:", error);
+      }
+    }
+
     // Function to monitor caption status and auto-enable if needed
     function monitorCaptions() {
       // Check if we're on a video page
@@ -120,6 +146,9 @@ export default defineContentScript({
         sendResponse({ success: true, captionsEnabled: isCaptionsEnabled() });
       }
     });
+
+    // Auto-start custom position on page load
+    autoStartCustomPosition();
 
     // Monitor for caption status changes
     setInterval(monitorCaptions, 3000); // Check every 3 seconds

@@ -4,6 +4,7 @@ import './App.css';
 function App() {
   const [currentPosition, setCurrentPosition] = useState<'default' | 'custom'>('default');
   const [captionsEnabled, setCaptionsEnabled] = useState<boolean>(false);
+  const [autoStartEnabled, setAutoStartEnabled] = useState<boolean>(false);
 
   // Function to send message to content script
   const sendMessageToContent = async (action: 'setCustom' | 'setDefault' | 'checkCaptions' | 'enableCaptions') => {
@@ -19,7 +20,7 @@ function App() {
     }
   };
 
-  // Check caption status when popup opens
+  // Check caption status and load auto-start setting when popup opens
   useEffect(() => {
     const checkCaptionStatus = async () => {
       const response = await sendMessageToContent('checkCaptions');
@@ -28,7 +29,17 @@ function App() {
       }
     };
     
+    const loadAutoStartSetting = async () => {
+      try {
+        const result = await browser.storage.local.get(['autoStartCustomPosition']);
+        setAutoStartEnabled(result.autoStartCustomPosition || false);
+      } catch (error) {
+        console.error('Failed to load auto-start setting:', error);
+      }
+    };
+    
     checkCaptionStatus();
+    loadAutoStartSetting();
   }, []);
 
   // Handle custom position
@@ -56,6 +67,17 @@ function App() {
     }
   };
 
+  // Handle auto-start toggle
+  const handleAutoStartToggle = async () => {
+    const newValue = !autoStartEnabled;
+    setAutoStartEnabled(newValue);
+    try {
+      await browser.storage.local.set({ autoStartCustomPosition: newValue });
+    } catch (error) {
+      console.error('Failed to save auto-start setting:', error);
+    }
+  };
+
   return (
     <div className="popup-container">
       <h1>Submarine</h1>
@@ -75,6 +97,17 @@ function App() {
         )}
       </div>
       
+      <div className="auto-start-section">
+        <label className="auto-start-toggle">
+          <input 
+            type="checkbox" 
+            checked={autoStartEnabled}
+            onChange={handleAutoStartToggle}
+          />
+          <span className="toggle-label">自动启动自定义位置</span>
+        </label>
+      </div>
+
       <div className="controls">
         <button 
           className={`control-btn ${currentPosition === 'custom' ? 'active' : ''}`}

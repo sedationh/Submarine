@@ -1,10 +1,13 @@
+p {
+  margin: 0;
+}
+
 .popup-container {
   width: 300px;
   padding: 20px;
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
   background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
   color: white;
-  border-radius: 12px;
 }
 
 h1 {
@@ -24,7 +27,7 @@ h1 {
 
 .caption-status {
   background: rgba(255, 255, 255, 0.1);
-  padding: 16px;
+  padding: 8px;
   border-radius: 8px;
   margin-bottom: 16px;
   backdrop-filter: blur(10px);
@@ -32,7 +35,6 @@ h1 {
 }
 
 .caption-status p {
-  margin: 0 0 12px 0;
   font-weight: 600;
   font-size: 13px;
 }
@@ -70,6 +72,35 @@ h1 {
 .enable-captions-btn:hover {
   background: rgba(76, 175, 80, 1);
   transform: translateY(-1px);
+}
+
+.auto-start-section {
+  background: rgba(255, 255, 255, 0.1);
+  padding: 16px;
+  border-radius: 8px;
+  margin-bottom: 16px;
+  backdrop-filter: blur(10px);
+}
+
+.auto-start-toggle {
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 500;
+}
+
+.auto-start-toggle input[type="checkbox"] {
+  margin-right: 12px;
+  width: 18px;
+  height: 18px;
+  cursor: pointer;
+  accent-color: #4caf50;
+}
+
+.toggle-label {
+  color: white;
+  user-select: none;
 }
 
 .controls {
