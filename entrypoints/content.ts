@@ -95,12 +95,9 @@ export default defineContentScript({
         "ytp-caption-window-container"
       );
 
-      if (!captionContainer) {
-        return;
-      }
       const divBelow = document.getElementById("below");
       const divSecondary = document.getElementById("secondary");
-      if (window.getComputedStyle(captionContainer).position !== "fixed") {
+      if (!captionContainer || window.getComputedStyle(captionContainer).position !== "fixed") {
         // If the caption container is not fixed, reset the margin of the 'below' div
         if (divBelow) {
           divBelow.style.marginTop = "";
